@@ -1,9 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import './menu-item.styles.css';
 
-import '../menu-item.component.css';
 
-const MenuItem = ({title, imageUrl, size}) =>(
-     <div className ={`${size} menu-item`}
+
+const MenuItem = ({title, imageUrl, size,linkUrl }) =>{
+   const navigate =useNavigate();
+
+   const handleClick =()=>{
+      navigate (linkUrl);
+   };
+
+    return (<div className ={`${size} menu-item`} onClick={handleClick}
      >
          <div className="background-image" 
             style={{ 
@@ -15,6 +23,7 @@ const MenuItem = ({title, imageUrl, size}) =>(
                   <span className="subtitile">SHOP NOW</span>
                </div>
            </div>
-);
+           );     
+     };
 
 export default MenuItem;

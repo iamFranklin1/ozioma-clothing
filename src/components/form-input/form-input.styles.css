@@ -39,7 +39,7 @@
   pointer-events: none;
   left: 5px;
   top: 10px;
-  transition: 0.3s ease;
+  transition:300ms ease all;
 }
 
 .group.form-input-label.shrink {

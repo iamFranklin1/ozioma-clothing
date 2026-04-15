@@ -6,7 +6,7 @@ import CollectionPage from "../collection/collection.component";
 
 const ShopPage =()=>{
     const match =useMatch('/shop/*');
-    console.log(match);
+    
 
     return (
     <div className="shop-page">

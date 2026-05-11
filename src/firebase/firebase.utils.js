@@ -1,7 +1,8 @@
 // Import Firebase v9 modular SDK
 import { initializeApp } from "firebase/app";
 import { getAuth,createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc} from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, writeBatch, collection} from "firebase/firestore";
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -27,14 +28,12 @@ provider.setCustomParameters({ prompt: 'select_account' });
 
 export const signInWithGoogle = () => signInWithPopup(auth, provider);
 
-
 export const createAuthUserWithEmailAndPassword =(email, password) =>
   createUserWithEmailAndPassword(auth, email, password);
 
 // Create user profile document
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
-
 
   const userRef = doc(db, 'users', userAuth.uid);
 
@@ -60,6 +59,33 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
+export const addCollectionAndDocuments =async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(db,collectionKey);
+  
+  const batch =writeBatch(db);
+  objectsToAdd.forEach(obj =>{
+    const newDocRef = doc(collectionRef);
+    batch.set(newDocRef,obj);
+  });
 
+  await batch.commit();
+};
+
+  export const convertCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc =>{
+   const {title,items} =doc.data();
+
+   return{
+    routeName: encodeURI(title.toLowerCase()),
+    id: doc.id,
+    title,
+    items
+   };
+  });
+  return transformedCollection.reduce((accumulator, collection)=>{
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  },{});
+};
 
 export default firebaseApp;

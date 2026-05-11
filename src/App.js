@@ -13,10 +13,13 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from './components/pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './components/pages/checkout/checkout.component';
 
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';
 import { onSnapshot} from 'firebase/firestore';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
+import { selectCollectionForPreview } from './redux/shop/shop.selectors';
+
+
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
@@ -24,11 +27,11 @@ class App extends React.Component {
     const {setCurrentUser} = this.props;
 
     this.unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
-      const userRef = await createUserProfileDocument(userAuth);
-
        if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-       
+        const userRef = await createUserProfileDocument(userAuth)
+
+      //  addCollectionAndDocuments ('collections',
+      //   collectionsArray.map(({title, items}) => ({title, items})));
         // Listen for updates to the user document
         this.unsubscribeFromSnapshot = onSnapshot(userRef, (snapShot) => {
               setCurrentUser({
@@ -36,11 +39,9 @@ class App extends React.Component {
               ...snapShot.data()
             });
           });
-        } 
-      
-      else {
+        } else {
         setCurrentUser(userAuth);
-      }
+      }   
   });
     }
 
@@ -75,7 +76,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser : selectCurrentUser
+  currentUser : selectCurrentUser,
+  collectionsArray:selectCollectionForPreview
 })
 
 const mapDispatchToProps = dispatch =>({

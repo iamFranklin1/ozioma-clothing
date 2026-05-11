@@ -19,7 +19,11 @@ import rootReducer from './root-reducer'
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>{
-    const middleswares = getDefaultMiddleware();
+    const middleswares = getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE']
+      },
+    });
   
   if (process.env.NODE_ENV ==='development') {
     middleswares.concat(logger);

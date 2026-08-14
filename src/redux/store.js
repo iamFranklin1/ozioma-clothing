@@ -13,8 +13,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
 import { persistStore } from 'redux-persist';
+import { thunk } from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
+
+import {fetchCollectionsStart} from './shop/shop.sagas';
 
 import rootReducer from './root-reducer'
+import rootSaga from './root-saga';
+const sagaMiddleware =createSagaMiddleware();
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -27,12 +33,14 @@ export const store = configureStore({
   
   if (process.env.NODE_ENV ==='development') {
     middleswares.concat(logger);
-    return middleswares.concat(logger);
+    return middleswares.concat(logger, sagaMiddleware);
   }
-  return middleswares;
+  return middleswares.concat(sagaMiddleware);
 },
  devTools: process.env.NODE_ENV !== 'production',
 });
+
+sagaMiddleware.run(rootSaga);
 
 export const persistor = persistStore(store);
 

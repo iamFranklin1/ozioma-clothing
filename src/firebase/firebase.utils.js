@@ -23,10 +23,9 @@ export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp);
 
 // Google Auth Provider
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
-
-export const signInWithGoogle = () => signInWithPopup(auth, provider);
+export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
 
 export const createAuthUserWithEmailAndPassword =(email, password) =>
   createUserWithEmailAndPassword(auth, email, password);
@@ -87,5 +86,14 @@ export const addCollectionAndDocuments =async (collectionKey, objectsToAdd) => {
     return accumulator;
   },{});
 };
+
+export const getCurrentUser = () =>{
+  return new Promise ((resolve, reject) =>{
+    const unsubscribe = auth.onAuthStateChanged(userAuth =>{
+      unsubscribe();
+      resolve(userAuth)
+    }, reject)
+  });
+}
 
 export default firebaseApp;

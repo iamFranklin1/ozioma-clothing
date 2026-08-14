@@ -1,4 +1,4 @@
-import React, { use } from 'react'
+import React from 'react';
 
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ const CollectionPage = () =>{
     const {collectionId} = useParams();
     const collection = useSelector(selectCollection(collectionId));
 
+  
     const {title, items} = collection;
     return(
  <div className='collection'>

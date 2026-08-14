@@ -13,36 +13,39 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from './components/pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './components/pages/checkout/checkout.component';
 
-import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';
-import { onSnapshot} from 'firebase/firestore';
-import { setCurrentUser } from './redux/user/user.actions';
+// import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';
+// import { onSnapshot} from 'firebase/firestore';
+// import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
 import { selectCollectionForPreview } from './redux/shop/shop.selectors';
-
+import {checkUserSession} from './redux/user/user.actions';
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const {setCurrentUser} = this.props;
 
-    this.unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
-       if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth)
+    const {checkUserSession} = this.props;
+    checkUserSession();
+    // const {setCurrentUser} = this.props;
 
-      //  addCollectionAndDocuments ('collections',
-      //   collectionsArray.map(({title, items}) => ({title, items})));
-        // Listen for updates to the user document
-        this.unsubscribeFromSnapshot = onSnapshot(userRef, (snapShot) => {
-              setCurrentUser({
-                id: snapShot.id,
-              ...snapShot.data()
-            });
-          });
-        } else {
-        setCurrentUser(userAuth);
-      }   
-  });
+  //   this.unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
+  //      if (userAuth) {
+  //       const userRef = await createUserProfileDocument(userAuth)
+
+  //     //  addCollectionAndDocuments ('collections',
+  //     //   collectionsArray.map(({title, items}) => ({title, items})));
+  //       // Listen for updates to the user document
+  //       this.unsubscribeFromSnapshot = onSnapshot(userRef, (snapShot) => {
+  //             setCurrentUser({
+  //               id: snapShot.id,
+  //             ...snapShot.data()
+  //           });
+  //         });
+  //       } else {
+  //       setCurrentUser(userAuth);
+  //     }   
+  // });
     }
 
   componentWillUnmount() {
@@ -81,7 +84,11 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const mapDispatchToProps = dispatch =>({
- setCurrentUser : user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 })
+
+// const mapDispatchToProps = dispatch =>({
+//  setCurrentUser : user => dispatch(setCurrentUser(user))
+// })
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

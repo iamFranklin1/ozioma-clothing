@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect}from 'react';
 import {Routes, Route ,} from "react-router-dom";
 import {connect} from 'react-redux';
 
@@ -8,13 +8,21 @@ import CollectionPageCointainer from '../collection/collection-container'
 
 
 
-class  ShopPage extends React.Component{
- componentDidMount(){
-  const {fetchCollectionsStartAsync} =this.props;
+// class  ShopPage extends React.Component{
+//  componentDidMount(){
+//   const {fetchCollectionsStartAsync} =this.props;
   
-  fetchCollectionsStartAsync();
- }
-render(){
+//   fetchCollectionsStartAsync();
+//  }
+// render(){
+
+const ShopPage = ({fetchCollectionsStartAsync}) =>{
+    useEffect( () =>{
+     fetchCollectionsStartAsync()
+    },[fetchCollectionsStartAsync]) 
+    
+    
+
 
     return (
     <div className="shop-page">
@@ -24,7 +32,7 @@ render(){
     </Routes>
 </div>
     );
-}};
+};
     
 
 

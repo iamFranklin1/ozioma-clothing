@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import { Routes, Route} from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -20,13 +20,19 @@ import { selectCurrentUser } from './redux/user/user.selector';
 import { selectCollectionForPreview } from './redux/shop/shop.selectors';
 import {checkUserSession} from './redux/user/user.actions';
 
-class App extends React.Component {
-  unsubscribeFromAuth = null;
+// class App extends React.Component {
+//   unsubscribeFromAuth = null;
 
-  componentDidMount() {
+//   componentDidMount() {
 
-    const {checkUserSession} = this.props;
-    checkUserSession();
+//     const {checkUserSession} = this.props;
+//     checkUserSession();
+    const App =({checkUserSession, currentUser}) =>{
+      useEffect (() =>{
+        checkUserSession()
+      },[checkUserSession]);
+      
+
     // const {setCurrentUser} = this.props;
 
   //   this.unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
@@ -46,18 +52,18 @@ class App extends React.Component {
   //       setCurrentUser(userAuth);
   //     }   
   // });
-    }
+    // }
 
-  componentWillUnmount() {
-    if (this.unsubscribeFromAuth) {
-      this.unsubscribeFromAuth();
-    }
-    if (this.unsubscribeFromSnapshot) {
-      this.unsubscribeFromSnapshot();
-    }
-  }
+  // componentWillUnmount() {
+  //   if (this.unsubscribeFromAuth) {
+  //     this.unsubscribeFromAuth();
+  //   }
+  //   if (this.unsubscribeFromSnapshot) {
+  //     this.unsubscribeFromSnapshot();
+  //   }
+  // }
 
-  render() {
+ 
     return (
       <div className="App">
         <Header />
@@ -66,7 +72,7 @@ class App extends React.Component {
           <Route path="/shop/*" element={<ShopPage />} />
           <Route path='/checkout' element = {<CheckoutPage/>} />
           <Route path="/signin" 
-          element={ this.props.currentUser? (
+          element={currentUser? (
             <Navigate to ='/'/>
           ) :(<SignInAndSignUpPage/>
             )
@@ -75,8 +81,8 @@ class App extends React.Component {
         </Routes>
       </div>
     );
+  
   }
-}
 
 const mapStateToProps = createStructuredSelector({
   currentUser : selectCurrentUser,

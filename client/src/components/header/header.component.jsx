@@ -12,7 +12,7 @@ import { selectCurrentUser } from "../../redux/user/user.selector";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 
-import {HeaderContainer, LogoContainer,OptionsContainer,OptionLink,OptionDiv} from './header.styles'
+import {HeaderContainer, LogoContainer,OptionsContainer,OptionLink} from './header.styles'
 import {signOutStart} from '../../redux/user/user.actions'
 
 const Header =({currentUser,hidden,signOutStart}) =>(
